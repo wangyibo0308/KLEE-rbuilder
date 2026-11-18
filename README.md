@@ -5,14 +5,13 @@
 ### Function flow
 
 ```mermaid
-flowchart TD
-    A["run_api_case() · Construct two bundles"] --> B["two_round_build_and_finalize()"]
-    B --> C["R1 · ResolverContext::run_conflict_task()"]
-    C --> D["process_sequence_of_orders() · Fresh state for each bundle"]
-    D -->|"After both R1 simulations finish"| E["R2 · BlockBuildingResultAssembler::build_new_block()"]
-    E --> F["commit_order() · Shared block state"]
-    F -->|"After all selected bundles are attempted"| G["finalize_block() → PartialBlock::finalize()"]
-    G --> H["Block.body.transactions"]
+graph TD
+    A["run_api_case() creates two bundles"] --> B["two_round_build_and_finalize()"]
+    B --> C["R1: run_conflict_task()"]
+    C --> D["process_sequence_of_orders() simulates each bundle on fresh state"]
+    D --> E["R2: build_new_block() runs after both simulations"]
+    E --> F["commit_order() re-executes accepted bundles on shared state"]
+    F --> G["PartialBlock::finalize() fills Block.body.transactions"]
 ```
 
 ### Inputs
